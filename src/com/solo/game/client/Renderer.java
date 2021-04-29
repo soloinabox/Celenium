@@ -30,7 +30,7 @@ public class Renderer {
 
     }
 
-    public static void getFrame(long window, World world) {
+    public static void getFrame(long window, World world, Camera camera) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -50,7 +50,7 @@ public class Renderer {
 
                     Tile t = currentChunk.getTiles().get(x + chunk_width * y);
                     float[] rgb = t.getRgb();
-                    drawCell(x + chunk * chunk_width, y, rgb[0], rgb[1], rgb[2]);
+                    drawCell(x + currentChunk.getPosition() * chunk_width, y, rgb[0], rgb[1], rgb[2], camera);
 
                 }
             }
@@ -65,10 +65,16 @@ public class Renderer {
 
     }
 
-    public static void drawCell(int x, int y, float r, float g, float b) {
+    public static void drawCell(int x, int y, float r, float g, float b, Camera camera) {
 
         x *= Client.CELL_SIZE;
         y *= Client.CELL_SIZE;
+
+        x += Client.getWidth()/2;
+        y += Client.getHeight()/2;
+
+        x -= camera.getX();
+        y -= camera.getY();
 
         glBegin(GL_QUADS);
 

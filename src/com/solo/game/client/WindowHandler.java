@@ -1,5 +1,6 @@
 package com.solo.game.client;
 
+import com.solo.game.input.InputHandler;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -36,7 +37,12 @@ public class WindowHandler {
         glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(win, true); // We will detect this in the rendering loop
+            else {
+                InputHandler.handle(win, key, scancode, action, mods);
+            }
         });
+
+        glfwSetScrollCallback(window, InputHandler::scrollCallback);
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {

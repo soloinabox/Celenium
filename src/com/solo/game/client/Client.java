@@ -1,10 +1,12 @@
 package com.solo.game.client;
 
 import com.solo.game.client.exceptions.ClientConstructionFailedError;
+import com.solo.game.input.InputHandler;
 import com.solo.game.server.Server;
 import com.solo.game.util.JSONHandler;
 import com.solo.game.util.exceptions.JSONException;
 import org.json.simple.JSONObject;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -38,6 +40,7 @@ public class Client {
     public static final int CELL_SIZE = 64;
 
     private long window;
+    public static final Camera camera = new Camera(CELL_SIZE * 4);
 
     // Client constructor, instantiated when the game is run
     private Client(String version, UUID uuid) throws ClientConstructionFailedError {
@@ -106,7 +109,7 @@ public class Client {
     // Called when the game starts
     private void init() {
 
-        window = WindowHandler.generateWindow(width, height, title, resizeable, false);
+        window = WindowHandler.generateWindow(width, height, title, resizeable, vsync);
 
     }
 
@@ -115,11 +118,22 @@ public class Client {
 
         Renderer.init(width, height);
 
+        long currentFrame = System.currentTimeMillis();
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
 
-            Renderer.getFrame(window, connectedServer.getWorld());
+            long lastFrame = currentFrame;
+            currentFrame = System.currentTimeMillis();
+            float elapsed = (float) (currentFrame - lastFrame) / 1000;
+
+            camera.move(InputHandler.getX(), InputHandler.getY(), elapsed);
+            camera.changeSpeed(InputHandler.getScroll()*100);
+
+            InputHandler.update();
+
+            Renderer.getFrame(window, connectedServer.getWorld(), camera);
 
         }
 
@@ -151,4 +165,13 @@ public class Client {
     public void setConnectedServer(Server connectedServer) {
         this.connectedServer = connectedServer;
     }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
 }

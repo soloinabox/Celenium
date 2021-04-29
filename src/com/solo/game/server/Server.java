@@ -157,9 +157,9 @@ public class Server {
 
         }
 
-        world.addChunk(c1);
-        world.addChunk(c2);
-        world.addChunk(c3);
+        world.addChunkRight(c1);
+        world.addChunkLeft(c2);
+        world.addChunkRight(c3);
 
     }
 
