@@ -1,6 +1,7 @@
 package com.solo.game.client;
 
 import com.solo.game.client.exceptions.ClientConstructionFailedError;
+import com.solo.game.server.Server;
 import com.solo.game.util.JSONHandler;
 import com.solo.game.util.exceptions.JSONException;
 import org.json.simple.JSONObject;
@@ -21,6 +22,8 @@ public class Client {
     private final String version;
     // The UUID should be unique per client to ensure one client per server
     private final UUID uuid;
+
+    private Server connectedServer;
 
     /* GLFW */
 
@@ -116,7 +119,7 @@ public class Client {
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
 
-            Renderer.getFrame(window, CELL_SIZE);
+            Renderer.getFrame(window, connectedServer.getWorld());
 
         }
 
@@ -143,5 +146,9 @@ public class Client {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public void setConnectedServer(Server connectedServer) {
+        this.connectedServer = connectedServer;
     }
 }

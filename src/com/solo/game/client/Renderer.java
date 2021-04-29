@@ -1,5 +1,8 @@
 package com.solo.game.client;
 
+import com.solo.game.world.Chunk;
+import com.solo.game.world.World;
+import com.solo.game.world.tiles.Tile;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -27,16 +30,32 @@ public class Renderer {
 
     }
 
-    public static void getFrame(long window, int cell_size) {
+    public static void getFrame(long window, World world) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
         // This is where shit be drawn
-        drawCell(0, 0, cell_size, 1f, 1f, 1f);
-        drawCell(1, 0, cell_size, 1f, 0f, 0f);
-        drawCell(2, 0, cell_size, 0f, 1f, 0f);
-        drawCell(3, 1, cell_size, 0f, 0f, 1f);
-        drawCell(3, 2, cell_size, 0.8f, 0.1f, 0.7f);
+        // Lets draw the server world
+
+        int chunk_width = Chunk.getWIDTH();
+        int chunk_height = Chunk.getHEIGHT();
+
+        // i = x + width*y;
+
+        for(int chunk = 0; chunk < world.getChunks().size(); chunk++) {
+
+            Chunk currentChunk = world.getChunks().get(chunk);
+            for(int x = 0; x < chunk_width; x ++) {
+                for(int y = 0; y < chunk_height; y++) {
+
+                    Tile t = currentChunk.getTiles().get(x + chunk_width * y);
+                    float[] rgb = t.getRgb();
+                    drawCell(x + chunk * chunk_width, y, rgb[0], rgb[1], rgb[2]);
+
+                }
+            }
+
+        }
 
         glfwSwapBuffers(window); // swap the color buffers
 
@@ -46,18 +65,18 @@ public class Renderer {
 
     }
 
-    public static void drawCell(int x, int y, int cell_size, float r, float g, float b) {
+    public static void drawCell(int x, int y, float r, float g, float b) {
 
-        x *= cell_size;
-        y *= cell_size;
+        x *= Client.CELL_SIZE;
+        y *= Client.CELL_SIZE;
 
         glBegin(GL_QUADS);
 
         glColor4f(r, g, b, 1f);
         glVertex2d(x, y);
-        glVertex2d(x+cell_size, y);
-        glVertex2d(x+cell_size, y+cell_size);
-        glVertex2d(x, y+cell_size);
+        glVertex2d(x+Client.CELL_SIZE, y);
+        glVertex2d(x+Client.CELL_SIZE, y+Client.CELL_SIZE);
+        glVertex2d(x, y+Client.CELL_SIZE);
 
         glEnd();
 

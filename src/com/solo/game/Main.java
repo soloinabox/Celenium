@@ -17,6 +17,7 @@ public class Main {
             Server server = Server.customServer("resources/client_server.json");
 
             server.connect(client);
+            server.start();
             client.start();
 
         } catch (ClientNotUniqueException | InvalidVersionException | ServerFullException e) {
