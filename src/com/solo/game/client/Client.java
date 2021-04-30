@@ -4,12 +4,14 @@ import com.solo.game.client.exceptions.ClientConstructionFailedError;
 import com.solo.game.input.InputHandler;
 import com.solo.game.server.Server;
 import com.solo.game.util.JSONHandler;
+import com.solo.game.util.RandomUtil;
 import com.solo.game.util.Timing;
 import com.solo.game.util.exceptions.JSONException;
 import org.json.simple.JSONObject;
 import org.lwjgl.system.CallbackI;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -38,7 +40,7 @@ public class Client {
 
     /* Renderer */
 
-    public static final int CELL_SIZE = 64;
+    public static final int CELL_SIZE = 32;
 
     private long window;
     public static final Camera camera = new Camera(CELL_SIZE * 4);

@@ -1,5 +1,7 @@
 package com.solo.game.world;
 
+import com.solo.game.client.Client;
+import com.solo.game.world.tiles.AirTile;
 import com.solo.game.world.tiles.Tile;
 
 import java.util.ArrayList;
@@ -44,4 +46,45 @@ public class World {
     public void setChunks(List<Chunk> chunks) {
         this.chunks = chunks;
     }
+
+    public void generate() {
+
+        TileHandler.init();
+
+        try {
+            // Add 3 chunks left and right
+            addChunkRight(new Chunk());
+            addChunkRight(new Chunk());
+            addChunkRight(new Chunk());
+            addChunkLeft(new Chunk());
+            addChunkLeft(new Chunk());
+            addChunkLeft(new Chunk());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void requestUpdate(int x) {
+
+        if(x / Client.CELL_SIZE > chunks.get(chunks.size()-1).getPosition() * Chunk.WIDTH) {
+
+            try {
+                addChunkRight(new Chunk());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
+        } else if(x / Client.CELL_SIZE < chunks.get(0).getPosition() * Chunk.WIDTH) {
+
+            try {
+                addChunkLeft(new Chunk());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
 }

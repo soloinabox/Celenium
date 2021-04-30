@@ -6,6 +6,7 @@ import com.solo.game.server.exceptions.InvalidVersionException;
 import com.solo.game.server.exceptions.ServerContructionFailedError;
 import com.solo.game.server.exceptions.ServerFullException;
 import com.solo.game.util.JSONHandler;
+import com.solo.game.util.RandomUtil;
 import com.solo.game.util.exceptions.JSONException;
 import com.solo.game.world.Chunk;
 import com.solo.game.world.World;
@@ -114,52 +115,12 @@ public class Server {
 
     public void start() {
 
+        RandomUtil.init();
+
         // Generate world
         world = new World();
 
-        //Define blocks
-        Tile dirtTile = new Tile("Dirt", new float[] {0.9f, 0.4f, 0.15f});
-        Tile grassTile = new Tile("Grass", new float[] {0.2f, 0.9f, 0.2f});
-        Tile airTile = new AirTile();
-
-        //Generate chunks
-        Chunk c1 = new Chunk();
-        Chunk c2 = new Chunk();
-        Chunk c3 = new Chunk();
-
-        // 2 rows of air
-
-        for(int i = 0; i < 8; i++) {
-
-            c1.addTile(airTile);
-            c2.addTile(airTile);
-            c3.addTile(airTile);
-
-        }
-
-        // 1 row of grass
-
-        for(int i = 0; i < 4; i++) {
-
-            c1.addTile(grassTile);
-            c2.addTile(grassTile);
-            c3.addTile(grassTile);
-
-        }
-
-        // 3 rows of dirt
-
-        for(int i = 0; i < 12; i++) {
-
-            c1.addTile(dirtTile);
-            c2.addTile(dirtTile);
-            c3.addTile(dirtTile);
-
-        }
-
-        world.addChunkRight(c1);
-        world.addChunkLeft(c2);
-        world.addChunkRight(c3);
+        world.generate();
 
     }
 
