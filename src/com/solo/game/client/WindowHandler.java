@@ -34,13 +34,7 @@ public class WindowHandler {
             throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(win, true); // We will detect this in the rendering loop
-            else {
-                InputHandler.handle(win, key, scancode, action, mods);
-            }
-        });
+        glfwSetKeyCallback(window, InputHandler::handle);
 
         glfwSetScrollCallback(window, InputHandler::scrollCallback);
 

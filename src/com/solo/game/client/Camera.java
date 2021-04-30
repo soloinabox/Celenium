@@ -1,5 +1,7 @@
 package com.solo.game.client;
 
+import com.solo.game.util.Timing;
+
 public class Camera {
 
     private float x;
@@ -16,10 +18,10 @@ public class Camera {
 
     }
 
-    public void move(int x, int y, float elapsed) {
+    public void move(float x, float y) {
 
-        this.x += x * speed * elapsed;
-        this.y += y * speed * elapsed;
+        this.x += x * speed * Timing.elapsed;
+        this.y += y * speed * Timing.elapsed;
 
     }
 

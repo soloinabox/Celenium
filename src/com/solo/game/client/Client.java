@@ -4,6 +4,7 @@ import com.solo.game.client.exceptions.ClientConstructionFailedError;
 import com.solo.game.input.InputHandler;
 import com.solo.game.server.Server;
 import com.solo.game.util.JSONHandler;
+import com.solo.game.util.Timing;
 import com.solo.game.util.exceptions.JSONException;
 import org.json.simple.JSONObject;
 import org.lwjgl.system.CallbackI;
@@ -117,18 +118,16 @@ public class Client {
     private void loop() {
 
         Renderer.init(width, height);
-
-        long currentFrame = System.currentTimeMillis();
+        Timing.init();
+        InputHandler.init();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
 
-            long lastFrame = currentFrame;
-            currentFrame = System.currentTimeMillis();
-            float elapsed = (float) (currentFrame - lastFrame) / 1000;
+            Timing.next();
 
-            camera.move(InputHandler.getX(), InputHandler.getY(), elapsed);
+            camera.move(InputHandler.getAxisFloat("x"), InputHandler.getAxisFloat("y"));
             camera.changeSpeed(InputHandler.getScroll()*100);
 
             InputHandler.update();
